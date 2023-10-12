@@ -3,8 +3,20 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Hero from "../components/Hero";
+import { useAccount } from "wagmi";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+  const { isConnected } = useAccount()
+  const router = useRouter()
+
+  useEffect(() => {
+    if(isConnected) {
+      router.push('/dashboard')
+    }
+  }, [isConnected])
+  
   return (
     <div className={styles.container}>
       <Head>
@@ -15,11 +27,9 @@ const Home: NextPage = () => {
         />
         <link href="/favicon.ico" rel="icon" />
       </Head>
-
       <Hero />
-
       <footer className={styles.footer}>
-        <a href="https://rainbow.me" rel="noopener noreferrer" target="_blank">
+        <a >
           Made with ❤️ 🇨🇴 🇨🇿
         </a>
       </footer>
