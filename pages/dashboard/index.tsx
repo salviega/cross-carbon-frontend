@@ -20,12 +20,14 @@ import { useAccount } from "wagmi";
 import MyCertificates from "../../components/certificates/MyCertificates";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import Purchase from "../../components/certificates/Purchase";
+import Calculate from "../../components/certificates/Calculator";
 
 const Dashboard = () => {
   const { isConnected } = useAccount();
   const router = useRouter();
   const [myCert, setMyCert] = useState(false);
   const [purchaseWindow, setPurchaseWindow] = useState(false);
+  const [calculateWindow, setCalculateWindow] = useState(false);
   useEffect(() => {
     if (!isConnected) {
       router.push("/");
@@ -38,6 +40,7 @@ const Dashboard = () => {
   const hideWindows = () => {
     setMyCert(false)
     setPurchaseWindow(false)
+    setCalculateWindow(false)
   }
   return (
     <>
@@ -73,7 +76,8 @@ const Dashboard = () => {
             <CardFooter>
               <Flex justifyContent="center" gap={4}>
                 <Button colorScheme="blue" variant='outline' onClick={() => showWindow(setMyCert, myCert)}>View Your Certificates</Button>
-                <Button colorScheme="teal" variant='outline' onClick={() => showWindow(setPurchaseWindow, purchaseWindow)}>Purchase New Certificate</Button>
+                <Button colorScheme="teal" variant='outline' onClick={() => showWindow(setPurchaseWindow, purchaseWindow)}>Purchase & Offset</Button>
+                <Button colorScheme="green" variant='outline' onClick={() => showWindow(setCalculateWindow, calculateWindow)}>Calculate & offset</Button>
               </Flex>
             </CardFooter>
           </Card>
@@ -81,6 +85,7 @@ const Dashboard = () => {
       </Box>
       {myCert && <MyCertificates />}
       {purchaseWindow && <Purchase />}
+      {calculateWindow && <Calculate />}
     </>
   );
 };
