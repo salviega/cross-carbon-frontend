@@ -77,7 +77,7 @@ const Dashboard = () => {
               <Flex justifyContent="center" gap={4}>
                 <Button colorScheme="blue" variant='outline' onClick={() => showWindow(setMyCert, myCert)}>View Your Certificates</Button>
                 <Button colorScheme="teal" variant='outline' onClick={() => showWindow(setPurchaseWindow, purchaseWindow)}>Purchase & Offset</Button>
-                <Button colorScheme="green" variant='outline' onClick={() => showWindow(setCalculateWindow, calculateWindow)}>Calculate & offset</Button>
+                <Button colorScheme="green" variant='outline' onClick={() => showWindow(setCalculateWindow, calculateWindow)}>Calculate & Offset</Button>
               </Flex>
             </CardFooter>
           </Card>
