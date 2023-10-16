@@ -92,16 +92,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 								Cross Carbon
 							</Text>
 						</Link>
-						<HStack
-							as={'nav'}
-							spacing={4}
-							display={{ base: 'none', md: 'flex' }}
-							color='white'
-							fontWeight='semibold'
-						>
-							<NavLink link='explore'>Explore</NavLink>
-							<NavLink link='myprojects'>My projects</NavLink>
-						</HStack>
 					</HStack>
 					<Flex alignItems={'center'} justifyContent={'space-between'}>
 						<Menu>
