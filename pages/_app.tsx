@@ -14,7 +14,7 @@ import {
   polygonMumbai,
 } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, DarkMode } from "@chakra-ui/react";
 import { theme } from "../config/theme";
 import Layout from "../components/Layout";
 
