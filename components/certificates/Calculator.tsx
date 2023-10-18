@@ -1,8 +1,7 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
-  ButtonGroup,
   Card,
   CardBody,
   CardHeader,
@@ -13,51 +12,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaPlane, FaUtensils } from "react-icons/fa";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+
 import TravelCalculator from "../calculator/TravelCalculator";
 import GroceriesCalculator from "../calculator/GroceriesCalculator";
-export interface Form1Input {
-  eventName: string;
-  eventDescription: string;
-  duration: string;
-  country: string;
-  participants: string;
-  employees: string;
-  heatedArea: string;
-  airConditionedArea: string;
-}
-export interface Form1Ref {
-  validateAndSubmit: (callback: () => void) => void;
-}
+
 const Calculate = () => {
-  const stepNumber = 1;
-  const [progress, setProgress] = useState(100 / stepNumber);
-  const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [selectedButton, setSelectedButton] = useState<string>("Purchase");
-  const [purchaseAmount, setPurchaseAmount] = useState<string>("1");
   const [selectedCalculator, setSelectedCalculator] = useState<string | null>(
     null
   );
-
-  const showNextForm = () => {
-    setStep(step + 1);
-    if (step === stepNumber + 1) {
-      setProgress(100);
-    } else {
-      setProgress(progress + 100 / stepNumber + 1);
-    }
-  };
-  const onPurchaseAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    console.log(id, value);
-
-    if (isNaN(Number(value))) setPurchaseAmount("0");
-
-    if (Number(value) > 4) setPurchaseAmount("4");
-    else if (Number(value) < 0) setPurchaseAmount("0");
-    else setPurchaseAmount(value);
-  };
   return (
     <Box
       bg={useColorModeValue("brand.newBlack", "rgba(4,56,80, 0.5)")}

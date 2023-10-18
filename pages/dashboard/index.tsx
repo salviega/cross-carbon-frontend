@@ -1,3 +1,6 @@
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 import {
   Box,
   Button,
@@ -7,18 +10,11 @@ import {
   CardHeader,
   Flex,
   Heading,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+
 import MyCertificates from "../../components/certificates/MyCertificates";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import Purchase from "../../components/certificates/Purchase";
 import Calculate from "../../components/certificates/Calculator";
 
@@ -34,22 +30,17 @@ const Dashboard = () => {
     }
   }, [isConnected]);
   const showWindow = (setEvent: (value: boolean) => void, event: boolean) => {
-    hideWindows()
-    setEvent(!event)
-  }
+    hideWindows();
+    setEvent(!event);
+  };
   const hideWindows = () => {
-    setMyCert(false)
-    setPurchaseWindow(false)
-    setCalculateWindow(false)
-  }
+    setMyCert(false);
+    setPurchaseWindow(false);
+    setCalculateWindow(false);
+  };
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        mt={"17"}
-      >
+      <Box display="flex" flexDirection="column" alignItems="center" mt={"17"}>
         <Box
           bg={useColorModeValue("brand.newBlack", "rgba(4,56,80, 0.5)")}
           px={4}
@@ -66,7 +57,6 @@ const Dashboard = () => {
           <Card bg={"transparent"} align="center">
             <CardHeader>
               <Heading size="lg"> Welcome</Heading>
-              
             </CardHeader>
             <CardBody>
               <Text>
@@ -75,9 +65,29 @@ const Dashboard = () => {
             </CardBody>
             <CardFooter>
               <Flex justifyContent="center" gap={4}>
-                <Button colorScheme="blue" variant='outline' onClick={() => showWindow(setMyCert, myCert)}>View Your Certificates</Button>
-                <Button colorScheme="teal" variant='outline' onClick={() => showWindow(setPurchaseWindow, purchaseWindow)}>Purchase & Offset</Button>
-                <Button colorScheme="green" variant='outline' onClick={() => showWindow(setCalculateWindow, calculateWindow)}>Calculate & Offset</Button>
+                <Button
+                  colorScheme="blue"
+                  variant="outline"
+                  onClick={() => showWindow(setMyCert, myCert)}
+                >
+                  View Your Certificates
+                </Button>
+                <Button
+                  colorScheme="teal"
+                  variant="outline"
+                  onClick={() => showWindow(setPurchaseWindow, purchaseWindow)}
+                >
+                  Purchase, Share & Offset
+                </Button>
+                <Button
+                  colorScheme="green"
+                  variant="outline"
+                  onClick={() =>
+                    showWindow(setCalculateWindow, calculateWindow)
+                  }
+                >
+                  Calculate & Offset
+                </Button>
               </Flex>
             </CardFooter>
           </Card>
