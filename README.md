@@ -1,29 +1,53 @@
-This is a [RainbowKit](https://rainbowkit.com) + [wagmi](https://wagmi.sh) + [Next.js](https://nextjs.org/) project bootstrapped with [`create-rainbowkit`](https://github.com/rainbow-me/rainbowkit/tree/main/packages/create-rainbowkit).
+# Cross Carbon
 
-## Getting Started
+Cross Carbon: interoperability carbon offset dApp
 
-First, run the development server:
+### Vercel deploy
 
-```bash
-npm run dev
+Vercel url: https://cross-carbon-frontend.vercel.app/
+
+### Cross Carbon - backend Serverless:
+
+Repository url: https://github.com/RookieCol/cross-carbon-backend.git
+
+### Cross Carbon - backend Node:
+
+Repository url: https://github.com/salviega/cross-carbon-listener
+
+### Cross Carbon - contracts:
+
+Repository url: https://github.com/salviega/green-carbon-calculator-contracts.git
+
+### Cross Carbon - subgraph:
+
+Repository url: https://github.com/RookieCol/cross-carbon-subgraph
+
+## Quick start 🏄
+
+Prerequisites: [Node (v19 LTS)](https://nodejs.org/en/download/) and [Git](https://git-scm.com/downloads)
+
+> Clone the repository:
+
+```
+git clone https://github.com/salviega/cross-carbon-frontend.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Install dependencies:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```
+yarn
+```
 
-## Learn More
+> Run the project:
 
-To learn more about this stack, take a look at the following resources:
+```
+yarn dev
+```
 
-- [RainbowKit Documentation](https://rainbowkit.com) - Learn how to customize your wallet connection flow.
-- [wagmi Documentation](https://wagmi.sh) - Learn how to interact with Ethereum.
-- [Next.js Documentation](https://nextjs.org/docs) - Learn how to build a Next.js application.
+## Authors 🏗
 
-You can check out [the RainbowKit GitHub repository](https://github.com/rainbow-me/rainbowkit) - your feedback and contributions are welcome!
+[RookieCol](https://github.com/RookieCol)
 
-## Deploy on Vercel
+[salviega](https://github.com/salviega)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[sheva323](https://github.com/sheva323)
