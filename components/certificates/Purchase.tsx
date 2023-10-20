@@ -200,12 +200,12 @@ const Purchase = () => {
   };
   const onClickSend = async () => {
     try {
-      await setCorrectChain(sendInfo.networkIndex)
-      setVerificationAmount(sendAmount)
-      setSelectedNetworkConfirm(sendInfo.networkIndex)
-      setAction("SEND")
-      setIsSend(true)
-      setVerifyModal(true)
+      await setCorrectChain(sendInfo.networkIndex);
+      setVerificationAmount(sendAmount);
+      setSelectedNetworkConfirm(sendInfo.networkIndex);
+      setAction("SEND");
+      setIsSend(true);
+      setVerifyModal(true);
     } catch (error) {
       toast({
         title: "There was an error sending the token, please try again.",
@@ -216,18 +216,18 @@ const Purchase = () => {
     }
   };
   const setCorrectChain = async (network: number) => {
-    const ethereum = (window as any).ethereum
-    const chainId = getChainID(network)
+    const ethereum = (window as any).ethereum;
+    const chainId = getChainID(network);
     await ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: `0x${chainId.toString(16)}` }],
-    })
+    });
   };
   const onConfirm = () => {
     if (action === "PURCHASE") {
       onPurchase();
     } else if (action === "SEND") {
-      onSend()
+      onSend();
     } else if (action === "OFFSET") {
       onOffset();
     }
@@ -397,7 +397,7 @@ const Purchase = () => {
       });
       setLoadingVerify(false);
     }
-  }
+  };
   const getSigner = async (): Promise<ethers.providers.JsonRpcSigner> => {
     const ethereum = (window as any).ethereum;
     const web3Provider: ethers.providers.Web3Provider =
@@ -417,7 +417,7 @@ const Purchase = () => {
     <Box
       bg={useColorModeValue("brand.newBlack", "rgba(4,56,80, 0.5)")}
       px={4}
-      width="100%"
+      width="96%"
       maxWidth="100%"
       margin="15px auto"
       borderRadius="2xl"
