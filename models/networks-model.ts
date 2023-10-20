@@ -1,5 +1,6 @@
 export const AvailableNetworks: string[] = [
-  "ETH (Sepolia)",
   "Polygon (Mumbai)",
+  "ETH (Sepolia)",
   "Optimism (OP-Goerli)",
+  "Arbitrum (Goerli)",
 ];

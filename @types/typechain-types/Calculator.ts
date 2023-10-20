@@ -23,13 +23,16 @@ export interface CalculatorInterface extends utils.Interface {
     "acceptOwnership()": FunctionFragment;
     "handleOracleFulfillment(bytes32,bytes,bytes)": FunctionFragment;
     "owner()": FunctionFragment;
+    "s_lastArgs(uint256)": FunctionFragment;
+    "s_lastBuyer()": FunctionFragment;
     "s_lastError()": FunctionFragment;
+    "s_lastFlag()": FunctionFragment;
     "s_lastRequestId()": FunctionFragment;
     "s_lastResponse()": FunctionFragment;
-    "sendRequest(string,bytes,uint8,uint64,string[],bytes[],uint64,uint32,bytes32)": FunctionFragment;
+    "s_lastReturns(uint256)": FunctionFragment;
+    "sendRequest(address,string,string,bytes,uint8,uint64,string[],bytes[],uint64,uint32,bytes32)": FunctionFragment;
     "sendRequestCBOR(bytes,uint64,uint32,bytes32)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "travels(bytes32)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -42,7 +45,19 @@ export interface CalculatorInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "s_lastArgs",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_lastBuyer",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "s_lastError",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_lastFlag",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -54,8 +69,14 @@ export interface CalculatorInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "s_lastReturns",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "sendRequest",
     values: [
+      string,
+      string,
       string,
       BytesLike,
       BigNumberish,
@@ -75,7 +96,6 @@ export interface CalculatorInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "travels", values: [BytesLike]): string;
 
   decodeFunctionResult(
     functionFragment: "acceptOwnership",
@@ -86,16 +106,26 @@ export interface CalculatorInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "s_lastArgs", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "s_lastBuyer",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "s_lastError",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "s_lastFlag", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "s_lastRequestId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "s_lastResponse",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "s_lastReturns",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -110,9 +140,9 @@ export interface CalculatorInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "travels", data: BytesLike): Result;
 
   events: {
+    "CarbonFootprintCalculated(bytes32,string,string[],uint256[],address)": EventFragment;
     "OwnershipTransferRequested(address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "RequestFulfilled(bytes32)": EventFragment;
@@ -120,12 +150,27 @@ export interface CalculatorInterface extends utils.Interface {
     "Response(bytes32,bytes,bytes)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "CarbonFootprintCalculated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferRequested"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RequestFulfilled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RequestSent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Response"): EventFragment;
 }
+
+export type CarbonFootprintCalculatedEvent = TypedEvent<
+  [string, string, string[], BigNumber[], string],
+  {
+    requestId: string;
+    s_lastFlag: string;
+    s_lastArgs: string[];
+    s_lastReturns: BigNumber[];
+    s_lastBuyer: string;
+  }
+>;
+
+export type CarbonFootprintCalculatedEventFilter =
+  TypedEventFilter<CarbonFootprintCalculatedEvent>;
 
 export type OwnershipTransferRequestedEvent = TypedEvent<
   [string, string],
@@ -200,13 +245,29 @@ export interface Calculator extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
+    s_lastArgs(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    s_lastBuyer(overrides?: CallOverrides): Promise<[string]>;
+
     s_lastError(overrides?: CallOverrides): Promise<[string]>;
+
+    s_lastFlag(overrides?: CallOverrides): Promise<[string]>;
 
     s_lastRequestId(overrides?: CallOverrides): Promise<[string]>;
 
     s_lastResponse(overrides?: CallOverrides): Promise<[string]>;
 
+    s_lastReturns(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     sendRequest(
+      buyer: string,
+      flag: string,
       source: string,
       encryptedSecretsUrls: BytesLike,
       donHostedSecretsSlotID: BigNumberish,
@@ -231,17 +292,6 @@ export interface Calculator extends BaseContract {
       to: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    travels(
-      arg0: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        distance: BigNumber;
-        nights: BigNumber;
-        total: BigNumber;
-      }
-    >;
   };
 
   acceptOwnership(
@@ -257,13 +307,26 @@ export interface Calculator extends BaseContract {
 
   owner(overrides?: CallOverrides): Promise<string>;
 
+  s_lastArgs(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  s_lastBuyer(overrides?: CallOverrides): Promise<string>;
+
   s_lastError(overrides?: CallOverrides): Promise<string>;
+
+  s_lastFlag(overrides?: CallOverrides): Promise<string>;
 
   s_lastRequestId(overrides?: CallOverrides): Promise<string>;
 
   s_lastResponse(overrides?: CallOverrides): Promise<string>;
 
+  s_lastReturns(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   sendRequest(
+    buyer: string,
+    flag: string,
     source: string,
     encryptedSecretsUrls: BytesLike,
     donHostedSecretsSlotID: BigNumberish,
@@ -289,17 +352,6 @@ export interface Calculator extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  travels(
-    arg0: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      distance: BigNumber;
-      nights: BigNumber;
-      total: BigNumber;
-    }
-  >;
-
   callStatic: {
     acceptOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -312,13 +364,26 @@ export interface Calculator extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<string>;
 
+    s_lastArgs(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    s_lastBuyer(overrides?: CallOverrides): Promise<string>;
+
     s_lastError(overrides?: CallOverrides): Promise<string>;
+
+    s_lastFlag(overrides?: CallOverrides): Promise<string>;
 
     s_lastRequestId(overrides?: CallOverrides): Promise<string>;
 
     s_lastResponse(overrides?: CallOverrides): Promise<string>;
 
+    s_lastReturns(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     sendRequest(
+      buyer: string,
+      flag: string,
       source: string,
       encryptedSecretsUrls: BytesLike,
       donHostedSecretsSlotID: BigNumberish,
@@ -340,20 +405,24 @@ export interface Calculator extends BaseContract {
     ): Promise<string>;
 
     transferOwnership(to: string, overrides?: CallOverrides): Promise<void>;
-
-    travels(
-      arg0: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        distance: BigNumber;
-        nights: BigNumber;
-        total: BigNumber;
-      }
-    >;
   };
 
   filters: {
+    "CarbonFootprintCalculated(bytes32,string,string[],uint256[],address)"(
+      requestId?: BytesLike | null,
+      s_lastFlag?: null,
+      s_lastArgs?: null,
+      s_lastReturns?: null,
+      s_lastBuyer?: null
+    ): CarbonFootprintCalculatedEventFilter;
+    CarbonFootprintCalculated(
+      requestId?: BytesLike | null,
+      s_lastFlag?: null,
+      s_lastArgs?: null,
+      s_lastReturns?: null,
+      s_lastBuyer?: null
+    ): CarbonFootprintCalculatedEventFilter;
+
     "OwnershipTransferRequested(address,address)"(
       from?: string | null,
       to?: string | null
@@ -406,13 +475,29 @@ export interface Calculator extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
+    s_lastArgs(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_lastBuyer(overrides?: CallOverrides): Promise<BigNumber>;
+
     s_lastError(overrides?: CallOverrides): Promise<BigNumber>;
+
+    s_lastFlag(overrides?: CallOverrides): Promise<BigNumber>;
 
     s_lastRequestId(overrides?: CallOverrides): Promise<BigNumber>;
 
     s_lastResponse(overrides?: CallOverrides): Promise<BigNumber>;
 
+    s_lastReturns(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     sendRequest(
+      buyer: string,
+      flag: string,
       source: string,
       encryptedSecretsUrls: BytesLike,
       donHostedSecretsSlotID: BigNumberish,
@@ -437,8 +522,6 @@ export interface Calculator extends BaseContract {
       to: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    travels(arg0: BytesLike, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -455,13 +538,29 @@ export interface Calculator extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    s_lastArgs(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    s_lastBuyer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     s_lastError(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    s_lastFlag(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     s_lastRequestId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     s_lastResponse(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    s_lastReturns(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     sendRequest(
+      buyer: string,
+      flag: string,
       source: string,
       encryptedSecretsUrls: BytesLike,
       donHostedSecretsSlotID: BigNumberish,
@@ -485,11 +584,6 @@ export interface Calculator extends BaseContract {
     transferOwnership(
       to: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    travels(
-      arg0: BytesLike,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

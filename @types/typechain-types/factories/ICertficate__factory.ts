@@ -122,6 +122,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "string",
+        name: "_baseURI",
+        type: "string",
+      },
+    ],
+    name: "changeBaseURI",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "tokenId",
         type: "uint256",
@@ -200,11 +213,6 @@ const _abi = [
         internalType: "address",
         name: "to",
         type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
       },
     ],
     name: "safeMint",

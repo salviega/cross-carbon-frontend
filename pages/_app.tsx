@@ -4,14 +4,10 @@ import { getDefaultWallets, RainbowKitProvider, darkTheme } from "@rainbow-me/ra
 import type { AppProps } from "next/app";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import {
-  arbitrum,
-  goerli,
-  mainnet,
-  optimism,
-  polygon,
-  base,
-  zora,
   polygonMumbai,
+  arbitrumGoerli,
+  optimismGoerli,
+  sepolia
 } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { ChakraProvider, DarkMode } from "@chakra-ui/react";
@@ -20,14 +16,8 @@ import Layout from "../components/Layout";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    zora,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-      ? [goerli, polygonMumbai]
+      ? [sepolia, polygonMumbai, arbitrumGoerli, optimismGoerli]
       : []),
   ],
   [publicProvider()]

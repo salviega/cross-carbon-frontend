@@ -17,27 +17,13 @@ import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
 import { Listener, Provider } from "@ethersproject/providers";
 import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
-export declare namespace Carbon {
-  export type TravelStruct = {
-    distance: BigNumberish;
-    nights: BigNumberish;
-    total: BigNumberish;
-  };
-
-  export type TravelStructOutput = [BigNumber, BigNumber, BigNumber] & {
-    distance: BigNumber;
-    nights: BigNumber;
-    total: BigNumber;
-  };
-}
-
 export interface CarbonInterface extends utils.Interface {
   contractName: "Carbon";
   functions: {
     "CARBON_CALCULATOR_ADDRESS()": FunctionFragment;
     "CARBON_CERTIFICATE_ADDRESS()": FunctionFragment;
+    "CARBON_COMMUNICATOR_ADDRESS()": FunctionFragment;
     "EPNS_COMM_ADDRESS()": FunctionFragment;
-    "LINK_TOKEN_ADDRESS()": FunctionFragment;
     "TCO2FaucetExtense()": FunctionFragment;
     "TCO2TokenExtense()": FunctionFragment;
     "TCO2TokensInContract()": FunctionFragment;
@@ -47,18 +33,31 @@ export interface CarbonInterface extends utils.Interface {
     "burn(uint256)": FunctionFragment;
     "burnFrom(address,uint256)": FunctionFragment;
     "buyCarbonCredits(address,uint256)": FunctionFragment;
-    "calculateTravelFootprint(string,bytes,uint8,uint64,string[],bytes[],uint64,uint32,bytes32)": FunctionFragment;
+    "buyCarbonCreditsCrosschain(address,uint256,address,string,uint64)": FunctionFragment;
+    "carbonTokensBurned()": FunctionFragment;
+    "carbonTokensBurnedPerUser(address)": FunctionFragment;
     "carbonTokensMinted()": FunctionFragment;
     "decimals()": FunctionFragment;
+    "groceryRequests(bytes32)": FunctionFragment;
+    "isMumbai()": FunctionFragment;
     "name()": FunctionFragment;
+    "offsetCarbonFootprint(bytes32,string,string[],uint256[],address,string)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "retireCarbonCredits(address,uint256)": FunctionFragment;
+    "retireCarbonCredits(address,uint256,string)": FunctionFragment;
+    "retireCarbonCreditsCrosschain(address,uint256,string,address,string,uint64)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
+    "transferCrosschain(address,uint256,address,string,uint64)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "transferFromCrosschain(address,address,uint256,address,string,uint64)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "travelRequests(bytes32)": FunctionFragment;
+    "websocketBuyCarbonCredits(address,uint256,string)": FunctionFragment;
+    "websocketRetireCarbonCredits(address,uint256,string)": FunctionFragment;
+    "websocketTransfer(address,address,uint256,string)": FunctionFragment;
+    "websocketTransferFrom(address,address,address,uint256,string)": FunctionFragment;
     "withdrawFunds()": FunctionFragment;
     "withdrawTCO2Tokens()": FunctionFragment;
   };
@@ -72,11 +71,11 @@ export interface CarbonInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "EPNS_COMM_ADDRESS",
+    functionFragment: "CARBON_COMMUNICATOR_ADDRESS",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "LINK_TOKEN_ADDRESS",
+    functionFragment: "EPNS_COMM_ADDRESS",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -110,25 +109,32 @@ export interface CarbonInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "calculateTravelFootprint",
-    values: [
-      string,
-      BytesLike,
-      BigNumberish,
-      BigNumberish,
-      string[],
-      BytesLike[],
-      BigNumberish,
-      BigNumberish,
-      BytesLike
-    ]
+    functionFragment: "buyCarbonCreditsCrosschain",
+    values: [string, BigNumberish, string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "carbonTokensBurned",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "carbonTokensBurnedPerUser",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "carbonTokensMinted",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "groceryRequests",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(functionFragment: "isMumbai", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "offsetCarbonFootprint",
+    values: [BytesLike, string, string[], BigNumberish[], string, string]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -136,7 +142,11 @@ export interface CarbonInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "retireCarbonCredits",
-    values: [string, BigNumberish]
+    values: [string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "retireCarbonCreditsCrosschain",
+    values: [string, BigNumberish, string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
@@ -148,12 +158,40 @@ export interface CarbonInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferCrosschain",
+    values: [string, BigNumberish, string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferFromCrosschain",
+    values: [string, string, BigNumberish, string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "travelRequests",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "websocketBuyCarbonCredits",
+    values: [string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "websocketRetireCarbonCredits",
+    values: [string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "websocketTransfer",
+    values: [string, string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "websocketTransferFrom",
+    values: [string, string, string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawFunds",
@@ -173,11 +211,11 @@ export interface CarbonInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "EPNS_COMM_ADDRESS",
+    functionFragment: "CARBON_COMMUNICATOR_ADDRESS",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "LINK_TOKEN_ADDRESS",
+    functionFragment: "EPNS_COMM_ADDRESS",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -202,7 +240,15 @@ export interface CarbonInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "calculateTravelFootprint",
+    functionFragment: "buyCarbonCreditsCrosschain",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "carbonTokensBurned",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "carbonTokensBurnedPerUser",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -210,7 +256,16 @@ export interface CarbonInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "groceryRequests",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "isMumbai", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "offsetCarbonFootprint",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -220,6 +275,10 @@ export interface CarbonInterface extends utils.Interface {
     functionFragment: "retireCarbonCredits",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "retireCarbonCreditsCrosschain",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -227,11 +286,39 @@ export interface CarbonInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "transferCrosschain",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "transferFromCrosschain",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "travelRequests",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "websocketBuyCarbonCredits",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "websocketRetireCarbonCredits",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "websocketTransfer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "websocketTransferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -246,16 +333,36 @@ export interface CarbonInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "BougthCarbonCredits(address,uint256)": EventFragment;
+    "BougthCarbonCreditsCrosschain(address,uint256,string)": EventFragment;
+    "GroceryCarbonFootprintOffset(bytes32,string,string,string,uint256,uint256,uint256,uint256,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "RetiredCarbonCredits(address,uint256,uint256)": EventFragment;
+    "RetiredCarbonCreditsCrosschain(address,uint256,string)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "TransferCrosschain(address,address,uint256,string)": EventFragment;
+    "TransferFromCrosschain(address,address,address,uint256,string)": EventFragment;
+    "TravelCarbonFootprintOffset(bytes32,string,string,uint256,uint256,uint256,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BougthCarbonCredits"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "BougthCarbonCreditsCrosschain"
+  ): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "GroceryCarbonFootprintOffset"
+  ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RetiredCarbonCredits"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "RetiredCarbonCreditsCrosschain"
+  ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TransferCrosschain"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TransferFromCrosschain"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "TravelCarbonFootprintOffset"
+  ): EventFragment;
 }
 
 export type ApprovalEvent = TypedEvent<
@@ -273,6 +380,42 @@ export type BougthCarbonCreditsEvent = TypedEvent<
 export type BougthCarbonCreditsEventFilter =
   TypedEventFilter<BougthCarbonCreditsEvent>;
 
+export type BougthCarbonCreditsCrosschainEvent = TypedEvent<
+  [string, BigNumber, string],
+  { buyer: string; amount: BigNumber; network: string }
+>;
+
+export type BougthCarbonCreditsCrosschainEventFilter =
+  TypedEventFilter<BougthCarbonCreditsCrosschainEvent>;
+
+export type GroceryCarbonFootprintOffsetEvent = TypedEvent<
+  [
+    string,
+    string,
+    string,
+    string,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    string
+  ],
+  {
+    requestId: string;
+    moneySpentProteins: string;
+    moneySpentFats: string;
+    moneySpentCarbs: string;
+    proteinsEmission: BigNumber;
+    fatsEmission: BigNumber;
+    carbsEmission: BigNumber;
+    foodEmission: BigNumber;
+    buyer: string;
+  }
+>;
+
+export type GroceryCarbonFootprintOffsetEventFilter =
+  TypedEventFilter<GroceryCarbonFootprintOffsetEvent>;
+
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string],
   { previousOwner: string; newOwner: string }
@@ -289,12 +432,58 @@ export type RetiredCarbonCreditsEvent = TypedEvent<
 export type RetiredCarbonCreditsEventFilter =
   TypedEventFilter<RetiredCarbonCreditsEvent>;
 
+export type RetiredCarbonCreditsCrosschainEvent = TypedEvent<
+  [string, BigNumber, string],
+  { buyer: string; amount: BigNumber; network: string }
+>;
+
+export type RetiredCarbonCreditsCrosschainEventFilter =
+  TypedEventFilter<RetiredCarbonCreditsCrosschainEvent>;
+
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber],
   { from: string; to: string; value: BigNumber }
 >;
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+
+export type TransferCrosschainEvent = TypedEvent<
+  [string, string, BigNumber, string],
+  { from: string; to: string; amount: BigNumber; network: string }
+>;
+
+export type TransferCrosschainEventFilter =
+  TypedEventFilter<TransferCrosschainEvent>;
+
+export type TransferFromCrosschainEvent = TypedEvent<
+  [string, string, string, BigNumber, string],
+  {
+    sender: string;
+    from: string;
+    to: string;
+    amount: BigNumber;
+    network: string;
+  }
+>;
+
+export type TransferFromCrosschainEventFilter =
+  TypedEventFilter<TransferFromCrosschainEvent>;
+
+export type TravelCarbonFootprintOffsetEvent = TypedEvent<
+  [string, string, string, BigNumber, BigNumber, BigNumber, string],
+  {
+    requestId: string;
+    distance: string;
+    nights: string;
+    flightEmission: BigNumber;
+    hotelEmission: BigNumber;
+    travelEmission: BigNumber;
+    buyer: string;
+  }
+>;
+
+export type TravelCarbonFootprintOffsetEventFilter =
+  TypedEventFilter<TravelCarbonFootprintOffsetEvent>;
 
 export interface Carbon extends BaseContract {
   contractName: "Carbon";
@@ -328,9 +517,9 @@ export interface Carbon extends BaseContract {
 
     CARBON_CERTIFICATE_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
 
-    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
+    CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
 
-    LINK_TOKEN_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
+    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
 
     TCO2FaucetExtense(overrides?: CallOverrides): Promise<[string]>;
 
@@ -369,24 +558,64 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    calculateTravelFootprint(
-      _source: string,
-      _encryptedSecretsUrls: BytesLike,
-      _donHostedSecretsSlotID: BigNumberish,
-      _donHostedSecretsVersion: BigNumberish,
-      _args: string[],
-      _bytesArgs: BytesLike[],
-      _subscriptionId: BigNumberish,
-      _gasLimit: BigNumberish,
-      _jobId: BytesLike,
+    buyCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    carbonTokensBurned(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    carbonTokensBurnedPerUser(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     carbonTokensMinted(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
+    groceryRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        string,
+        string,
+        string,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        string
+      ] & {
+        moneySpentProteins: string;
+        moneySpentFats: string;
+        moneySpentCarbs: string;
+        proteinsEmission: BigNumber;
+        fatsEmission: BigNumber;
+        carbsEmission: BigNumber;
+        foodEmission: BigNumber;
+        buyer: string;
+      }
+    >;
+
+    isMumbai(overrides?: CallOverrides): Promise<[boolean]>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
+
+    offsetCarbonFootprint(
+      _requestId: BytesLike,
+      _flag: string,
+      _args: string[],
+      _returns: BigNumberish[],
+      _buyer: string,
+      _tokenURI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -397,6 +626,17 @@ export interface Carbon extends BaseContract {
     retireCarbonCredits(
       _buyer: string,
       _amount: BigNumberish,
+      _tokenURI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    retireCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _tokenURI: string,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -410,6 +650,15 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    transferCrosschain(
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     transferFrom(
       from: string,
       to: string,
@@ -417,8 +666,63 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    transferFromCrosschain(
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    travelRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, BigNumber, BigNumber, BigNumber, string] & {
+        distance: string;
+        nights: string;
+        flightEmission: BigNumber;
+        hotelEmission: BigNumber;
+        travelEmission: BigNumber;
+        buyer: string;
+      }
+    >;
+
+    websocketBuyCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    websocketRetireCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    websocketTransfer(
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    websocketTransferFrom(
+      _sender: string,
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -435,9 +739,9 @@ export interface Carbon extends BaseContract {
 
   CARBON_CERTIFICATE_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
-  EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<string>;
+  CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
-  LINK_TOKEN_ADDRESS(overrides?: CallOverrides): Promise<string>;
+  EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
   TCO2FaucetExtense(overrides?: CallOverrides): Promise<string>;
 
@@ -476,24 +780,64 @@ export interface Carbon extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  calculateTravelFootprint(
-    _source: string,
-    _encryptedSecretsUrls: BytesLike,
-    _donHostedSecretsSlotID: BigNumberish,
-    _donHostedSecretsVersion: BigNumberish,
-    _args: string[],
-    _bytesArgs: BytesLike[],
-    _subscriptionId: BigNumberish,
-    _gasLimit: BigNumberish,
-    _jobId: BytesLike,
+  buyCarbonCreditsCrosschain(
+    _buyer: string,
+    _amount: BigNumberish,
+    _receiver: string,
+    messageContent: string,
+    _destinationChainSelector: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  carbonTokensBurned(overrides?: CallOverrides): Promise<BigNumber>;
+
+  carbonTokensBurnedPerUser(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   carbonTokensMinted(overrides?: CallOverrides): Promise<BigNumber>;
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
+  groceryRequests(
+    arg0: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<
+    [
+      string,
+      string,
+      string,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      BigNumber,
+      string
+    ] & {
+      moneySpentProteins: string;
+      moneySpentFats: string;
+      moneySpentCarbs: string;
+      proteinsEmission: BigNumber;
+      fatsEmission: BigNumber;
+      carbsEmission: BigNumber;
+      foodEmission: BigNumber;
+      buyer: string;
+    }
+  >;
+
+  isMumbai(overrides?: CallOverrides): Promise<boolean>;
+
   name(overrides?: CallOverrides): Promise<string>;
+
+  offsetCarbonFootprint(
+    _requestId: BytesLike,
+    _flag: string,
+    _args: string[],
+    _returns: BigNumberish[],
+    _buyer: string,
+    _tokenURI: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -504,6 +848,17 @@ export interface Carbon extends BaseContract {
   retireCarbonCredits(
     _buyer: string,
     _amount: BigNumberish,
+    _tokenURI: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  retireCarbonCreditsCrosschain(
+    _buyer: string,
+    _amount: BigNumberish,
+    _tokenURI: string,
+    _receiver: string,
+    messageContent: string,
+    _destinationChainSelector: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -517,6 +872,15 @@ export interface Carbon extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  transferCrosschain(
+    to: string,
+    amount: BigNumberish,
+    _receiver: string,
+    messageContent: string,
+    destinationChainSelector: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   transferFrom(
     from: string,
     to: string,
@@ -524,8 +888,63 @@ export interface Carbon extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  transferFromCrosschain(
+    from: string,
+    to: string,
+    amount: BigNumberish,
+    _receiver: string,
+    messageContent: string,
+    destinationChainSelector: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   transferOwnership(
     newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  travelRequests(
+    arg0: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, BigNumber, BigNumber, BigNumber, string] & {
+      distance: string;
+      nights: string;
+      flightEmission: BigNumber;
+      hotelEmission: BigNumber;
+      travelEmission: BigNumber;
+      buyer: string;
+    }
+  >;
+
+  websocketBuyCarbonCredits(
+    _buyer: string,
+    _amount: BigNumberish,
+    _network: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  websocketRetireCarbonCredits(
+    _buyer: string,
+    _amount: BigNumberish,
+    _network: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  websocketTransfer(
+    _from: string,
+    _to: string,
+    _amount: BigNumberish,
+    _network: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  websocketTransferFrom(
+    _sender: string,
+    _from: string,
+    _to: string,
+    _amount: BigNumberish,
+    _network: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -542,9 +961,9 @@ export interface Carbon extends BaseContract {
 
     CARBON_CERTIFICATE_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
-    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<string>;
+    CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
-    LINK_TOKEN_ADDRESS(overrides?: CallOverrides): Promise<string>;
+    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
     TCO2FaucetExtense(overrides?: CallOverrides): Promise<string>;
 
@@ -580,24 +999,64 @@ export interface Carbon extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    calculateTravelFootprint(
-      _source: string,
-      _encryptedSecretsUrls: BytesLike,
-      _donHostedSecretsSlotID: BigNumberish,
-      _donHostedSecretsVersion: BigNumberish,
-      _args: string[],
-      _bytesArgs: BytesLike[],
-      _subscriptionId: BigNumberish,
-      _gasLimit: BigNumberish,
-      _jobId: BytesLike,
+    buyCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<Carbon.TravelStructOutput>;
+    ): Promise<void>;
+
+    carbonTokensBurned(overrides?: CallOverrides): Promise<BigNumber>;
+
+    carbonTokensBurnedPerUser(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     carbonTokensMinted(overrides?: CallOverrides): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
+    groceryRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        string,
+        string,
+        string,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        BigNumber,
+        string
+      ] & {
+        moneySpentProteins: string;
+        moneySpentFats: string;
+        moneySpentCarbs: string;
+        proteinsEmission: BigNumber;
+        fatsEmission: BigNumber;
+        carbsEmission: BigNumber;
+        foodEmission: BigNumber;
+        buyer: string;
+      }
+    >;
+
+    isMumbai(overrides?: CallOverrides): Promise<boolean>;
+
     name(overrides?: CallOverrides): Promise<string>;
+
+    offsetCarbonFootprint(
+      _requestId: BytesLike,
+      _flag: string,
+      _args: string[],
+      _returns: BigNumberish[],
+      _buyer: string,
+      _tokenURI: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -606,6 +1065,17 @@ export interface Carbon extends BaseContract {
     retireCarbonCredits(
       _buyer: string,
       _amount: BigNumberish,
+      _tokenURI: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    retireCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _tokenURI: string,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -619,6 +1089,15 @@ export interface Carbon extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    transferCrosschain(
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     transferFrom(
       from: string,
       to: string,
@@ -626,8 +1105,63 @@ export interface Carbon extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    transferFromCrosschain(
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     transferOwnership(
       newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    travelRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, BigNumber, BigNumber, BigNumber, string] & {
+        distance: string;
+        nights: string;
+        flightEmission: BigNumber;
+        hotelEmission: BigNumber;
+        travelEmission: BigNumber;
+        buyer: string;
+      }
+    >;
+
+    websocketBuyCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    websocketRetireCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    websocketTransfer(
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    websocketTransferFrom(
+      _sender: string,
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -657,6 +1191,40 @@ export interface Carbon extends BaseContract {
       amount?: null
     ): BougthCarbonCreditsEventFilter;
 
+    "BougthCarbonCreditsCrosschain(address,uint256,string)"(
+      buyer?: string | null,
+      amount?: null,
+      network?: null
+    ): BougthCarbonCreditsCrosschainEventFilter;
+    BougthCarbonCreditsCrosschain(
+      buyer?: string | null,
+      amount?: null,
+      network?: null
+    ): BougthCarbonCreditsCrosschainEventFilter;
+
+    "GroceryCarbonFootprintOffset(bytes32,string,string,string,uint256,uint256,uint256,uint256,address)"(
+      requestId?: BytesLike | null,
+      moneySpentProteins?: null,
+      moneySpentFats?: null,
+      moneySpentCarbs?: null,
+      proteinsEmission?: null,
+      fatsEmission?: null,
+      carbsEmission?: null,
+      foodEmission?: null,
+      buyer?: null
+    ): GroceryCarbonFootprintOffsetEventFilter;
+    GroceryCarbonFootprintOffset(
+      requestId?: BytesLike | null,
+      moneySpentProteins?: null,
+      moneySpentFats?: null,
+      moneySpentCarbs?: null,
+      proteinsEmission?: null,
+      fatsEmission?: null,
+      carbsEmission?: null,
+      foodEmission?: null,
+      buyer?: null
+    ): GroceryCarbonFootprintOffsetEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -677,6 +1245,17 @@ export interface Carbon extends BaseContract {
       certificateId?: null
     ): RetiredCarbonCreditsEventFilter;
 
+    "RetiredCarbonCreditsCrosschain(address,uint256,string)"(
+      buyer?: string | null,
+      amount?: null,
+      network?: null
+    ): RetiredCarbonCreditsCrosschainEventFilter;
+    RetiredCarbonCreditsCrosschain(
+      buyer?: string | null,
+      amount?: null,
+      network?: null
+    ): RetiredCarbonCreditsCrosschainEventFilter;
+
     "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
@@ -687,6 +1266,53 @@ export interface Carbon extends BaseContract {
       to?: string | null,
       value?: null
     ): TransferEventFilter;
+
+    "TransferCrosschain(address,address,uint256,string)"(
+      from?: string | null,
+      to?: string | null,
+      amount?: null,
+      network?: null
+    ): TransferCrosschainEventFilter;
+    TransferCrosschain(
+      from?: string | null,
+      to?: string | null,
+      amount?: null,
+      network?: null
+    ): TransferCrosschainEventFilter;
+
+    "TransferFromCrosschain(address,address,address,uint256,string)"(
+      sender?: string | null,
+      from?: string | null,
+      to?: string | null,
+      amount?: null,
+      network?: null
+    ): TransferFromCrosschainEventFilter;
+    TransferFromCrosschain(
+      sender?: string | null,
+      from?: string | null,
+      to?: string | null,
+      amount?: null,
+      network?: null
+    ): TransferFromCrosschainEventFilter;
+
+    "TravelCarbonFootprintOffset(bytes32,string,string,uint256,uint256,uint256,address)"(
+      requestId?: BytesLike | null,
+      distance?: null,
+      nights?: null,
+      flightEmission?: null,
+      hotelEmission?: null,
+      travelEmission?: null,
+      buyer?: null
+    ): TravelCarbonFootprintOffsetEventFilter;
+    TravelCarbonFootprintOffset(
+      requestId?: BytesLike | null,
+      distance?: null,
+      nights?: null,
+      flightEmission?: null,
+      hotelEmission?: null,
+      travelEmission?: null,
+      buyer?: null
+    ): TravelCarbonFootprintOffsetEventFilter;
   };
 
   estimateGas: {
@@ -694,9 +1320,9 @@ export interface Carbon extends BaseContract {
 
     CARBON_CERTIFICATE_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
+    CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
 
-    LINK_TOKEN_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
+    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
 
     TCO2FaucetExtense(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -735,24 +1361,44 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    calculateTravelFootprint(
-      _source: string,
-      _encryptedSecretsUrls: BytesLike,
-      _donHostedSecretsSlotID: BigNumberish,
-      _donHostedSecretsVersion: BigNumberish,
-      _args: string[],
-      _bytesArgs: BytesLike[],
-      _subscriptionId: BigNumberish,
-      _gasLimit: BigNumberish,
-      _jobId: BytesLike,
+    buyCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    carbonTokensBurned(overrides?: CallOverrides): Promise<BigNumber>;
+
+    carbonTokensBurnedPerUser(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     carbonTokensMinted(overrides?: CallOverrides): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
+    groceryRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isMumbai(overrides?: CallOverrides): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    offsetCarbonFootprint(
+      _requestId: BytesLike,
+      _flag: string,
+      _args: string[],
+      _returns: BigNumberish[],
+      _buyer: string,
+      _tokenURI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -763,6 +1409,17 @@ export interface Carbon extends BaseContract {
     retireCarbonCredits(
       _buyer: string,
       _amount: BigNumberish,
+      _tokenURI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    retireCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _tokenURI: string,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -776,6 +1433,15 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    transferCrosschain(
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     transferFrom(
       from: string,
       to: string,
@@ -783,8 +1449,54 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    transferFromCrosschain(
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    travelRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    websocketBuyCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    websocketRetireCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    websocketTransfer(
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    websocketTransferFrom(
+      _sender: string,
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -806,11 +1518,11 @@ export interface Carbon extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    LINK_TOKEN_ADDRESS(
+    CARBON_COMMUNICATOR_ADDRESS(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     TCO2FaucetExtense(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -854,17 +1566,22 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    calculateTravelFootprint(
-      _source: string,
-      _encryptedSecretsUrls: BytesLike,
-      _donHostedSecretsSlotID: BigNumberish,
-      _donHostedSecretsVersion: BigNumberish,
-      _args: string[],
-      _bytesArgs: BytesLike[],
-      _subscriptionId: BigNumberish,
-      _gasLimit: BigNumberish,
-      _jobId: BytesLike,
+    buyCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    carbonTokensBurned(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    carbonTokensBurnedPerUser(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     carbonTokensMinted(
@@ -873,7 +1590,24 @@ export interface Carbon extends BaseContract {
 
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    groceryRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isMumbai(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    offsetCarbonFootprint(
+      _requestId: BytesLike,
+      _flag: string,
+      _args: string[],
+      _returns: BigNumberish[],
+      _buyer: string,
+      _tokenURI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -884,6 +1618,17 @@ export interface Carbon extends BaseContract {
     retireCarbonCredits(
       _buyer: string,
       _amount: BigNumberish,
+      _tokenURI: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    retireCarbonCreditsCrosschain(
+      _buyer: string,
+      _amount: BigNumberish,
+      _tokenURI: string,
+      _receiver: string,
+      messageContent: string,
+      _destinationChainSelector: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -897,6 +1642,15 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    transferCrosschain(
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     transferFrom(
       from: string,
       to: string,
@@ -904,8 +1658,54 @@ export interface Carbon extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    transferFromCrosschain(
+      from: string,
+      to: string,
+      amount: BigNumberish,
+      _receiver: string,
+      messageContent: string,
+      destinationChainSelector: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    travelRequests(
+      arg0: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    websocketBuyCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    websocketRetireCarbonCredits(
+      _buyer: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    websocketTransfer(
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    websocketTransferFrom(
+      _sender: string,
+      _from: string,
+      _to: string,
+      _amount: BigNumberish,
+      _network: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

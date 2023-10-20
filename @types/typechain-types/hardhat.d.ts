@@ -13,6 +13,30 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
+      name: "CCIPReceiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.CCIPReceiver__factory>;
+    getContractFactory(
+      name: "IAny2EVMMessageReceiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IAny2EVMMessageReceiver__factory>;
+    getContractFactory(
+      name: "IRouterClient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IRouterClient__factory>;
+    getContractFactory(
+      name: "Client",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Client__factory>;
+    getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
+    getContractFactory(
+      name: "IERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC165__factory>;
+    getContractFactory(
       name: "FunctionsClient",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.FunctionsClient__factory>;
@@ -44,6 +68,10 @@ declare module "hardhat/types/runtime" {
       name: "IOwnable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IOwnable__factory>;
+    getContractFactory(
+      name: "LinkTokenInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LinkTokenInterface__factory>;
     getContractFactory(
       name: "Ownable",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -121,9 +149,41 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Certificate__factory>;
     getContractFactory(
+      name: "ConfirmedOwner",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ConfirmedOwner__factory>;
+    getContractFactory(
+      name: "ConfirmedOwnerWithProposal",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ConfirmedOwnerWithProposal__factory>;
+    getContractFactory(
+      name: "Calculator",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Calculator__factory>;
+    getContractFactory(
+      name: "Carbon",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Carbon__factory>;
+    getContractFactory(
+      name: "Certificate",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Certificate__factory>;
+    getContractFactory(
+      name: "Communicator",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Communicator__factory>;
+    getContractFactory(
       name: "ICertficate",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ICertficate__factory>;
+    getContractFactory(
+      name: "ICommunicator",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ICommunicator__factory>;
+    getContractFactory(
+      name: "IERC20Extended",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Extended__factory>;
     getContractFactory(
       name: "ILinkTokenInterface",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -140,7 +200,145 @@ declare module "hardhat/types/runtime" {
       name: "ITCO2Token",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ITCO2Token__factory>;
+    getContractFactory(
+      name: "IERC1155Errors",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155Errors__factory>;
+    getContractFactory(
+      name: "IERC20Errors",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Errors__factory>;
+    getContractFactory(
+      name: "IERC721Errors",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721Errors__factory>;
+    getContractFactory(
+      name: "ERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC165__factory>;
+    getContractFactory(
+      name: "ERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20__factory>;
+    getContractFactory(
+      name: "ERC20Burnable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20Burnable__factory>;
+    getContractFactory(
+      name: "ERC721",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC721__factory>;
+    getContractFactory(
+      name: "FunctionsClient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.FunctionsClient__factory>;
+    getContractFactory(
+      name: "FunctionsRequest",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.FunctionsRequest__factory>;
+    getContractFactory(
+      name: "ICertficate",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ICertficate__factory>;
+    getContractFactory(
+      name: "IERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC165__factory>;
+    getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
+    getContractFactory(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(
+      name: "IERC721",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721__factory>;
+    getContractFactory(
+      name: "IERC721Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721Metadata__factory>;
+    getContractFactory(
+      name: "IERC721Receiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721Receiver__factory>;
+    getContractFactory(
+      name: "IFunctionsClient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFunctionsClient__factory>;
+    getContractFactory(
+      name: "IFunctionsRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFunctionsRouter__factory>;
+    getContractFactory(
+      name: "IFunctionsSubscriptions",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFunctionsSubscriptions__factory>;
+    getContractFactory(
+      name: "ILinkTokenInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ILinkTokenInterface__factory>;
+    getContractFactory(
+      name: "IOwnable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IOwnable__factory>;
+    getContractFactory(
+      name: "IPUSHCommInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPUSHCommInterface__factory>;
+    getContractFactory(
+      name: "ITCO2Faucet",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ITCO2Faucet__factory>;
+    getContractFactory(
+      name: "ITCO2Token",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ITCO2Token__factory>;
+    getContractFactory(
+      name: "Math",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Math__factory>;
+    getContractFactory(
+      name: "Ownable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Ownable__factory>;
+    getContractFactory(
+      name: "Strings",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Strings__factory>;
 
+    getContractAt(
+      name: "CCIPReceiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.CCIPReceiver>;
+    getContractAt(
+      name: "IAny2EVMMessageReceiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IAny2EVMMessageReceiver>;
+    getContractAt(
+      name: "IRouterClient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IRouterClient>;
+    getContractAt(
+      name: "Client",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Client>;
+    getContractAt(
+      name: "IERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
+    getContractAt(
+      name: "IERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC165>;
     getContractAt(
       name: "FunctionsClient",
       address: string,
@@ -181,6 +379,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IOwnable>;
+    getContractAt(
+      name: "LinkTokenInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LinkTokenInterface>;
     getContractAt(
       name: "Ownable",
       address: string,
@@ -277,10 +480,50 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Certificate>;
     getContractAt(
+      name: "ConfirmedOwner",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ConfirmedOwner>;
+    getContractAt(
+      name: "ConfirmedOwnerWithProposal",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ConfirmedOwnerWithProposal>;
+    getContractAt(
+      name: "Calculator",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Calculator>;
+    getContractAt(
+      name: "Carbon",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Carbon>;
+    getContractAt(
+      name: "Certificate",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Certificate>;
+    getContractAt(
+      name: "Communicator",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Communicator>;
+    getContractAt(
       name: "ICertficate",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ICertficate>;
+    getContractAt(
+      name: "ICommunicator",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ICommunicator>;
+    getContractAt(
+      name: "IERC20Extended",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Extended>;
     getContractAt(
       name: "ILinkTokenInterface",
       address: string,
@@ -301,6 +544,141 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ITCO2Token>;
+    getContractAt(
+      name: "IERC1155Errors",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155Errors>;
+    getContractAt(
+      name: "IERC20Errors",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Errors>;
+    getContractAt(
+      name: "IERC721Errors",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721Errors>;
+    getContractAt(
+      name: "ERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC165>;
+    getContractAt(
+      name: "ERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20>;
+    getContractAt(
+      name: "ERC20Burnable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20Burnable>;
+    getContractAt(
+      name: "ERC721",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC721>;
+    getContractAt(
+      name: "FunctionsClient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.FunctionsClient>;
+    getContractAt(
+      name: "FunctionsRequest",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.FunctionsRequest>;
+    getContractAt(
+      name: "ICertficate",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ICertficate>;
+    getContractAt(
+      name: "IERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC165>;
+    getContractAt(
+      name: "IERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
+    getContractAt(
+      name: "IERC20Metadata",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Metadata>;
+    getContractAt(
+      name: "IERC721",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721>;
+    getContractAt(
+      name: "IERC721Metadata",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721Metadata>;
+    getContractAt(
+      name: "IERC721Receiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721Receiver>;
+    getContractAt(
+      name: "IFunctionsClient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFunctionsClient>;
+    getContractAt(
+      name: "IFunctionsRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFunctionsRouter>;
+    getContractAt(
+      name: "IFunctionsSubscriptions",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFunctionsSubscriptions>;
+    getContractAt(
+      name: "ILinkTokenInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ILinkTokenInterface>;
+    getContractAt(
+      name: "IOwnable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IOwnable>;
+    getContractAt(
+      name: "IPUSHCommInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPUSHCommInterface>;
+    getContractAt(
+      name: "ITCO2Faucet",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ITCO2Faucet>;
+    getContractAt(
+      name: "ITCO2Token",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ITCO2Token>;
+    getContractAt(
+      name: "Math",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Math>;
+    getContractAt(
+      name: "Ownable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Ownable>;
+    getContractAt(
+      name: "Strings",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Strings>;
 
     // default types
     getContractFactory(

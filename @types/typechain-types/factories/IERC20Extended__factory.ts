@@ -4,7 +4,10 @@
 
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IERC20, IERC20Interface } from "../IERC20";
+import type {
+  IERC20Extended,
+  IERC20ExtendedInterface,
+} from "../IERC20Extended";
 
 const _abi = [
   {
@@ -126,6 +129,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "decimals",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "totalSupply",
     outputs: [
       {
@@ -192,12 +208,15 @@ const _abi = [
   },
 ];
 
-export class IERC20__factory {
+export class IERC20Extended__factory {
   static readonly abi = _abi;
-  static createInterface(): IERC20Interface {
-    return new utils.Interface(_abi) as IERC20Interface;
+  static createInterface(): IERC20ExtendedInterface {
+    return new utils.Interface(_abi) as IERC20ExtendedInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): IERC20 {
-    return new Contract(address, _abi, signerOrProvider) as IERC20;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IERC20Extended {
+    return new Contract(address, _abi, signerOrProvider) as IERC20Extended;
   }
 }

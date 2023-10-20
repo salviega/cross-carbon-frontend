@@ -4,59 +4,12 @@
 
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IERC20, IERC20Interface } from "../IERC20";
+import type {
+  LinkTokenInterface,
+  LinkTokenInterfaceInterface,
+} from "../LinkTokenInterface";
 
 const _abi = [
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "spender",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-    ],
-    name: "Approval",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-    ],
-    name: "Transfer",
-    type: "event",
-  },
   {
     inputs: [
       {
@@ -74,7 +27,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "remaining",
         type: "uint256",
       },
     ],
@@ -90,7 +43,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "value",
         type: "uint256",
       },
     ],
@@ -98,7 +51,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bool",
-        name: "",
+        name: "success",
         type: "bool",
       },
     ],
@@ -109,7 +62,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "account",
+        name: "owner",
         type: "address",
       },
     ],
@@ -117,8 +70,89 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "balance",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "decimals",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "decimalPlaces",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "addedValue",
+        type: "uint256",
+      },
+    ],
+    name: "decreaseApproval",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "success",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "subtractedValue",
+        type: "uint256",
+      },
+    ],
+    name: "increaseApproval",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        internalType: "string",
+        name: "tokenName",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "symbol",
+    outputs: [
+      {
+        internalType: "string",
+        name: "tokenSymbol",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -130,7 +164,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "totalTokensIssued",
         type: "uint256",
       },
     ],
@@ -146,7 +180,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "value",
         type: "uint256",
       },
     ],
@@ -154,7 +188,36 @@ const _abi = [
     outputs: [
       {
         internalType: "bool",
-        name: "",
+        name: "success",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "transferAndCall",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "success",
         type: "bool",
       },
     ],
@@ -175,7 +238,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "value",
         type: "uint256",
       },
     ],
@@ -183,7 +246,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bool",
-        name: "",
+        name: "success",
         type: "bool",
       },
     ],
@@ -192,12 +255,15 @@ const _abi = [
   },
 ];
 
-export class IERC20__factory {
+export class LinkTokenInterface__factory {
   static readonly abi = _abi;
-  static createInterface(): IERC20Interface {
-    return new utils.Interface(_abi) as IERC20Interface;
+  static createInterface(): LinkTokenInterfaceInterface {
+    return new utils.Interface(_abi) as LinkTokenInterfaceInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): IERC20 {
-    return new Contract(address, _abi, signerOrProvider) as IERC20;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): LinkTokenInterface {
+    return new Contract(address, _abi, signerOrProvider) as LinkTokenInterface;
   }
 }

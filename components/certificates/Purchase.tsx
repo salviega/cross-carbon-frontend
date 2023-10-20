@@ -1,4 +1,6 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Contract, ethers } from "ethers";
+import { useAccount } from "wagmi";
 import {
   Box,
   Button,
@@ -16,37 +18,115 @@ import {
   Spacer,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
+import {
+  polygonMumbai,
+  arbitrumGoerli,
+  optimismGoerli,
+  sepolia,
+} from "wagmi/chains";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+
+import { Carbon } from "../../@types/typechain-types";
 import { AvailableNetworks } from "../../models/networks-model";
+import { ConfirmationModal } from "../modal/ConfirmationModal";
+import CarbonContractJson from "../../assets/contracts/Carbon.json";
+
 export type SendInfo = {
   address: string;
-  amount: string;
   networkIndex: number;
 };
 const Purchase = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const toast = useToast();
+  const { address } = useAccount();
+  const [verifyModal, setVerifyModal] = useState<boolean>(false);
+  const [loadingVerify, setLoadingVerify] = useState<boolean>(false);
+  const [verifyFinished, setVerifyFinished] = useState<boolean>(false);
+  const [isSend, setIsSend] = useState<boolean>(false);
+  const [selectedNetworkConfirm, setSelectedNetworkConfirm] =
+    useState<number>(0);
   const [selectedNetworkOffset, setSelectedNetworkOffset] = useState<number>(0);
   const [selectedNetworkPurchase, setSelectedNetworkPurchase] =
     useState<number>(0);
   const [selectedButton, setSelectedButton] = useState<string>("Purchase");
   const [purchaseAmount, setPurchaseAmount] = useState<string>("1");
-  const [currentCarbonAmount, setCurrentCarbonAmount] = useState<string>("0");
+  const [offsetAmount, setOffsetAmount] = useState<string>("1");
+  const [sendAmount, setSendAmount] = useState<string>("1");
+  const [verificationAmount, setVerificationAmount] = useState<string>("");
+  const [action, setAction] = useState<string>("");
+  const [currentCarbonBalance, setCurrentCarbonBalance] =
+    useState<string>(". . . . . . . .");
+  const [verifyTx, setVerifyTx] = useState<string>("");
   const [sendInfo, setSendInfo] = useState<SendInfo>({
     address: "0x",
-    amount: "",
     networkIndex: 0,
   });
-
+  useEffect(() => {
+    readCarbonBalance();
+  }, []);
+  const readCarbonBalance = async () => {
+    try {
+      const ethereum = (window as any).ethereum;
+      const web3Provider: ethers.providers.Web3Provider =
+        new ethers.providers.Web3Provider(ethereum);
+      await web3Provider.send("eth_requestAccounts", []);
+      const web3Signer: ethers.providers.JsonRpcSigner =
+        web3Provider.getSigner();
+      const contractAddress = getAddress(selectedNetworkPurchase);
+      if (!contractAddress || contractAddress === undefined) {
+        toast({
+          title: "Error reading $CARBON balance contract.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+      const contract = new Contract(
+        contractAddress,
+        CarbonContractJson.abi,
+        web3Signer
+      ) as Carbon;
+      const purchaseCarbonCreditsTX = await contract.balanceOf(address!, {
+        gasLimit: 2500000,
+      });
+      const weiValue = ethers.BigNumber.from(purchaseCarbonCreditsTX._hex);
+      const etherValue = ethers.utils.formatEther(weiValue);
+      setCurrentCarbonBalance(etherValue);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error reading $CARBON balance.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
   const onPurchaseAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    console.log(id, value);
-
     if (isNaN(Number(value))) setPurchaseAmount("0");
 
     if (Number(value) > 4) setPurchaseAmount("4");
     else if (Number(value) < 0) setPurchaseAmount("0");
     else setPurchaseAmount(value);
+  };
+  const onOffsetAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    if (isNaN(Number(value))) setOffsetAmount("0");
+
+    if (Number(value) > 4) setOffsetAmount("4");
+    else if (Number(value) < 0) setOffsetAmount("0");
+    else setOffsetAmount(value);
+  };
+  const onSendAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    if (isNaN(Number(value))) setSendAmount("0");
+
+    if (Number(value) > 4) setSendAmount("4");
+    else if (Number(value) < 0) setSendAmount("0");
+    else setSendAmount(value);
   };
   const onSetSendAddress = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -55,6 +135,283 @@ const Purchase = () => {
   };
   const onSetSendNetwork = (index: number) => {
     setSendInfo({ ...sendInfo, networkIndex: index });
+  };
+  const getAddress = (newworkIndex: number) => {
+    switch (newworkIndex) {
+      case 0:
+        return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CONTRACT_ADDRESS;
+      case 1:
+        return process.env.NEXT_PUBLIC_SEPOLIA_CONTRACT_ADDRESS;
+      case 2:
+        return process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_CONTRACT_ADDRESS;
+      case 3:
+        return process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_CONTRACT_ADDRESS;
+      default:
+        return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CONTRACT_ADDRESS;
+    }
+  };
+  const getChainID = (newworkIndex: number) => {
+    switch (newworkIndex) {
+      case 0:
+        return polygonMumbai.id;
+      case 1:
+        return sepolia.id;
+      case 2:
+        return optimismGoerli.id;
+      case 3:
+        return arbitrumGoerli.id;
+      default:
+        return polygonMumbai.id;
+    }
+  };
+  const onClickPurchase = async () => {
+    try {
+      await setCorrectChain(selectedNetworkPurchase);
+      setVerificationAmount(purchaseAmount);
+      setSelectedNetworkConfirm(selectedNetworkPurchase);
+      setAction("PURCHASE");
+      setIsSend(false);
+      setVerifyModal(true);
+    } catch (error) {
+      toast({
+        title: "There was an error purchasing, please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+  const onClickOffset = async () => {
+    try {
+      await setCorrectChain(selectedNetworkOffset);
+      setVerificationAmount(offsetAmount);
+      setSelectedNetworkConfirm(selectedNetworkOffset);
+      setAction("OFFSET");
+      setIsSend(false);
+      setVerifyModal(true);
+    } catch (error) {
+      toast({
+        title: "There was an error doing offset, please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+  const onClickSend = async () => {
+    try {
+      await setCorrectChain(sendInfo.networkIndex)
+      setVerificationAmount(sendAmount)
+      setSelectedNetworkConfirm(sendInfo.networkIndex)
+      setAction("SEND")
+      setIsSend(true)
+      setVerifyModal(true)
+    } catch (error) {
+      toast({
+        title: "There was an error sending the token, please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+  const setCorrectChain = async (network: number) => {
+    const ethereum = (window as any).ethereum
+    const chainId = getChainID(network)
+    await ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: `0x${chainId.toString(16)}` }],
+    })
+  };
+  const onConfirm = () => {
+    if (action === "PURCHASE") {
+      onPurchase();
+    } else if (action === "SEND") {
+      onSend()
+    } else if (action === "OFFSET") {
+      onOffset();
+    }
+  };
+  const onPurchase = async () => {
+    try {
+      setLoadingVerify(true);
+      const web3Signer = await getSigner();
+      const contractAddress = getAddress(selectedNetworkPurchase);
+      if (!contractAddress || contractAddress === undefined) {
+        toast({
+          title:
+            "Something is wrong with this network setting (no contract address).",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+      const contract = new Contract(
+        contractAddress,
+        CarbonContractJson.abi,
+        web3Signer
+      ) as Carbon;
+      let purchaseCarbonCreditsTX;
+      if (selectedNetworkPurchase === 0) {
+        purchaseCarbonCreditsTX = await contract.buyCarbonCredits(
+          address!,
+          ethers.utils.parseEther(purchaseAmount),
+          { gasLimit: 2500000 }
+        );
+      } else {
+        //TODO - add crosschain purchase
+        // purchaseCarbonCreditsTX = await contract.buyCarbonCreditsCrosschain(
+        //   address!,
+        //   ethers.utils.parseEther(purchaseAmount),
+        //   { gasLimit: 2500000 }
+        // );
+        purchaseCarbonCreditsTX = await contract.buyCarbonCredits(
+          address!,
+          ethers.utils.parseEther(purchaseAmount),
+          { gasLimit: 2500000 }
+        );
+      }
+      setVerifyTx(purchaseCarbonCreditsTX.hash);
+      setLoadingVerify(false);
+      setVerifyFinished(true);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "There was an error trying to purchase.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      setLoadingVerify(false);
+    }
+  };
+  const onOffset = async () => {
+    try {
+      setLoadingVerify(true);
+      const web3Signer = await getSigner();
+      const contractAddress = getAddress(selectedNetworkOffset);
+      if (!contractAddress || contractAddress === undefined) {
+        toast({
+          title:
+            "Something is wrong with this network setting (no contract address).",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+      const contract = new Contract(
+        contractAddress,
+        CarbonContractJson.abi,
+        web3Signer
+      ) as Carbon;
+
+      let offsetCarbonCreditsTX;
+      if (selectedNetworkOffset === 0) {
+        offsetCarbonCreditsTX = await contract.retireCarbonCredits(
+          address!,
+          ethers.utils.parseEther(offsetAmount),
+          "TOKEN URI", //TODO - add token uri
+          { gasLimit: 2500000 }
+        );
+      } else {
+        //TODO - add crosschain retireCarbonCredits
+        // purchaseCarbonCreditsTX = await contract.retireCarbonCreditsCrosschain(
+        //   address!,
+        // ethers.utils.parseEther(offsetAmount),
+        // 'TOKEN URI', //TODO - add token uri
+        //   { gasLimit: 2500000 }
+        // );
+        offsetCarbonCreditsTX = await contract.retireCarbonCredits(
+          address!,
+          ethers.utils.parseEther(offsetAmount),
+          "TOKEN URI", //TODO - add token uri
+          { gasLimit: 2500000 }
+        );
+      }
+      setVerifyTx(offsetCarbonCreditsTX.hash);
+      setLoadingVerify(false);
+      setVerifyFinished(true);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "There was an error trying to offset.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      setLoadingVerify(false);
+    }
+  };
+  const onSend = async () => {
+    try {
+      setLoadingVerify(true);
+      const web3Signer = await getSigner();
+      const contractAddress = getAddress(selectedNetworkOffset);
+      if (!contractAddress || contractAddress === undefined) {
+        toast({
+          title:
+            "Something is wrong with this network setting (no contract address).",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+      const contract = new Contract(
+        contractAddress,
+        CarbonContractJson.abi,
+        web3Signer
+      ) as Carbon;
+      let sendCarbonCreditsTX;
+      if (sendInfo.networkIndex === 0) {
+        sendCarbonCreditsTX = await contract.transfer(
+          sendInfo.address,
+          ethers.utils.parseEther(sendAmount),
+          { gasLimit: 2500000 }
+        );
+      } else {
+        //TODO - add crosschain transfer
+        // sendCarbonCreditsTX = await contract.transferCrosschain(
+        //   sendInfo.address,
+        //   ethers.utils.parseEther(sendAmount),
+        //   { gasLimit: 2500000 }
+        // );
+        sendCarbonCreditsTX = await contract.transfer(
+          sendInfo.address,
+          ethers.utils.parseEther(sendAmount),
+          { gasLimit: 2500000 }
+        );
+      }
+      setVerifyTx(sendCarbonCreditsTX.hash);
+      setLoadingVerify(false);
+      setVerifyFinished(true);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "There was an error trying to send token.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      setLoadingVerify(false);
+    }
+  }
+  const getSigner = async (): Promise<ethers.providers.JsonRpcSigner> => {
+    const ethereum = (window as any).ethereum;
+    const web3Provider: ethers.providers.Web3Provider =
+      new ethers.providers.Web3Provider(ethereum);
+    await web3Provider.send("eth_requestAccounts", []);
+    const web3Signer: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
+
+    return web3Signer;
+  };
+  const closeModal = () => {
+    setLoadingVerify(false);
+    setVerifyFinished(false);
+    setVerifyTx("");
+    setVerifyModal(false);
   };
   return (
     <Box
@@ -123,6 +480,19 @@ const Purchase = () => {
                   <Heading size="md" mb={4}>
                     Purchase new $CARBON tokens
                   </Heading>
+                  <Box marginBottom="20px">
+                    <Flex justifyContent="space-between" alignItems="center">
+                      <Text marginBottom="5px">Current $CARBON balance</Text>
+                      <Input
+                        variant="filled"
+                        width="100px"
+                        value={currentCarbonBalance}
+                        isReadOnly
+                        color="white"
+                        textAlign={"center"}
+                      />
+                    </Flex>
+                  </Box>
                   <Box marginBottom="10px">
                     <Text marginBottom="5px">Amount</Text>
                     <Box
@@ -176,7 +546,11 @@ const Purchase = () => {
                       </Text>
                     </Box>
                     <Flex justifyContent="center" mt={4}>
-                      <Button colorScheme="green" width="40%">
+                      <Button
+                        colorScheme="green"
+                        width="40%"
+                        onClick={onClickPurchase}
+                      >
                         Purchase
                       </Button>
                     </Flex>
@@ -197,13 +571,13 @@ const Purchase = () => {
                       <Input
                         variant="filled"
                         width="100px"
-                        value={currentCarbonAmount}
+                        value={currentCarbonBalance}
                         isReadOnly
                         color="white"
+                        textAlign={"center"}
                       />
                     </Flex>
                   </Box>
-
                   <Box marginBottom="10px">
                     <Text marginBottom="5px">Amount</Text>
                     <Box
@@ -220,11 +594,11 @@ const Purchase = () => {
                         <Input
                           variant="filled"
                           width="100px"
-                          value={purchaseAmount}
+                          value={offsetAmount}
                           type="number"
                           backgroundColor="blue.900"
                           color="white"
-                          onChange={onPurchaseAmountChange}
+                          onChange={onOffsetAmountChange}
                         />
                         <Spacer />
                         <Box display="flex" alignItems="center">
@@ -242,7 +616,7 @@ const Purchase = () => {
                                 <MenuItem
                                   key={network}
                                   onClick={() =>
-                                    setSelectedNetworkPurchase(index)
+                                    setSelectedNetworkOffset(index)
                                   }
                                 >
                                   {network}
@@ -257,7 +631,11 @@ const Purchase = () => {
                       </Text>
                     </Box>
                     <Flex justifyContent="center" mt={4}>
-                      <Button colorScheme="blue" width="40%">
+                      <Button
+                        colorScheme="blue"
+                        width="40%"
+                        onClick={onClickOffset}
+                      >
                         Offset
                       </Button>
                     </Flex>
@@ -281,13 +659,13 @@ const Purchase = () => {
                     <Input
                       variant="filled"
                       width="100px"
-                      value={currentCarbonAmount}
+                      value={currentCarbonBalance}
                       isReadOnly
                       color="white"
+                      textAlign={"center"}
                     />
                   </Flex>
                 </Box>
-
                 <Box marginBottom="10px">
                   <Text marginBottom="5px">Amount</Text>
                   <Box
@@ -305,11 +683,11 @@ const Purchase = () => {
                       <Input
                         variant="filled"
                         width="100px"
-                        value={purchaseAmount}
+                        value={sendAmount}
                         type="number"
                         backgroundColor="facebook.400"
                         color="white"
-                        onChange={onPurchaseAmountChange}
+                        onChange={onSendAmountChange}
                       />
                       <Spacer />
                       <Box display="flex" alignItems="center">
@@ -357,7 +735,11 @@ const Purchase = () => {
                     </Box>
                   </Box>
                   <Flex justifyContent="center" mt={4}>
-                    <Button colorScheme="facebook" width="40%">
+                    <Button
+                      colorScheme="facebook"
+                      width="40%"
+                      onClick={onClickSend}
+                    >
                       Send
                     </Button>
                   </Flex>
@@ -367,6 +749,21 @@ const Purchase = () => {
           </Box>
         </CardBody>
       </Card>
+      {verifyModal && (
+        <ConfirmationModal
+          isOpen={verifyModal}
+          onClose={closeModal}
+          onConfirm={onConfirm}
+          finished={verifyFinished}
+          loading={loadingVerify}
+          amount={verificationAmount}
+          selectedNetwork={selectedNetworkConfirm}
+          action={action}
+          tx={verifyTx}
+          isSend={isSend}
+          receiver={sendInfo.address}
+        />
+      )}
     </Box>
   );
 };
