@@ -23,6 +23,7 @@ export interface CarbonInterface extends utils.Interface {
     "CARBON_CALCULATOR_ADDRESS()": FunctionFragment;
     "CARBON_CERTIFICATE_ADDRESS()": FunctionFragment;
     "CARBON_COMMUNICATOR_ADDRESS()": FunctionFragment;
+    "CARBON_RECEIVER_ADDRESS()": FunctionFragment;
     "EPNS_COMM_ADDRESS()": FunctionFragment;
     "TCO2FaucetExtense()": FunctionFragment;
     "TCO2TokenExtense()": FunctionFragment;
@@ -72,6 +73,10 @@ export interface CarbonInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "CARBON_COMMUNICATOR_ADDRESS",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "CARBON_RECEIVER_ADDRESS",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -212,6 +217,10 @@ export interface CarbonInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "CARBON_COMMUNICATOR_ADDRESS",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "CARBON_RECEIVER_ADDRESS",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -519,6 +528,8 @@ export interface Carbon extends BaseContract {
 
     CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
 
+    CARBON_RECEIVER_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
+
     EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
 
     TCO2FaucetExtense(overrides?: CallOverrides): Promise<[string]>;
@@ -741,6 +752,8 @@ export interface Carbon extends BaseContract {
 
   CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
+  CARBON_RECEIVER_ADDRESS(overrides?: CallOverrides): Promise<string>;
+
   EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
   TCO2FaucetExtense(overrides?: CallOverrides): Promise<string>;
@@ -962,6 +975,8 @@ export interface Carbon extends BaseContract {
     CARBON_CERTIFICATE_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
     CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<string>;
+
+    CARBON_RECEIVER_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
     EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<string>;
 
@@ -1322,6 +1337,8 @@ export interface Carbon extends BaseContract {
 
     CARBON_COMMUNICATOR_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
 
+    CARBON_RECEIVER_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
+
     EPNS_COMM_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
 
     TCO2FaucetExtense(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1519,6 +1536,10 @@ export interface Carbon extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     CARBON_COMMUNICATOR_ADDRESS(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    CARBON_RECEIVER_ADDRESS(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

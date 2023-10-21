@@ -32,6 +32,7 @@ import { Carbon } from "../../@types/typechain-types";
 import { AvailableNetworks } from "../../models/networks-model";
 import { ConfirmationModal } from "../modal/ConfirmationModal";
 import CarbonContractJson from "../../assets/contracts/Carbon.json";
+import { getSigner } from "../../helpers/getSigner";
 
 export type SendInfo = {
   address: string;
@@ -67,12 +68,7 @@ const Purchase = () => {
   }, []);
   const readCarbonBalance = async () => {
     try {
-      const ethereum = (window as any).ethereum;
-      const web3Provider: ethers.providers.Web3Provider =
-        new ethers.providers.Web3Provider(ethereum);
-      await web3Provider.send("eth_requestAccounts", []);
-      const web3Signer: ethers.providers.JsonRpcSigner =
-        web3Provider.getSigner();
+      const web3Signer = await getSigner();
       const contractAddress = getAddress(selectedNetworkPurchase);
       if (!contractAddress || contractAddress === undefined) {
         toast({
@@ -139,15 +135,15 @@ const Purchase = () => {
   const getAddress = (newworkIndex: number) => {
     switch (newworkIndex) {
       case 0:
-        return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CONTRACT_ADDRESS;
+        return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CARBON_CONTRACT_ADDRESS;
       case 1:
-        return process.env.NEXT_PUBLIC_SEPOLIA_CONTRACT_ADDRESS;
+        return process.env.NEXT_PUBLIC_SEPOLIA_CARBON_CONTRACT_ADDRESS;
       case 2:
-        return process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_CONTRACT_ADDRESS;
+        return process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_CARBON_CONTRACT_ADDRESS;
       case 3:
-        return process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_CONTRACT_ADDRESS;
+        return process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_CARBON_CONTRACT_ADDRESS;
       default:
-        return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CONTRACT_ADDRESS;
+        return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CARBON_CONTRACT_ADDRESS;
     }
   };
   const getChainID = (newworkIndex: number) => {
@@ -397,15 +393,6 @@ const Purchase = () => {
       });
       setLoadingVerify(false);
     }
-  };
-  const getSigner = async (): Promise<ethers.providers.JsonRpcSigner> => {
-    const ethereum = (window as any).ethereum;
-    const web3Provider: ethers.providers.Web3Provider =
-      new ethers.providers.Web3Provider(ethereum);
-    await web3Provider.send("eth_requestAccounts", []);
-    const web3Signer: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
-
-    return web3Signer;
   };
   const closeModal = () => {
     setLoadingVerify(false);
