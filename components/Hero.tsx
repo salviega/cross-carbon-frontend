@@ -12,9 +12,6 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { Contract, ethers } from "ethers";
-import CarbonContractJson from "../assets/contracts/Carbon.json";
-import { Carbon } from "../@types/typechain-types/Carbon";
 
 export default function Hero() {
   // const testsc = async () => {

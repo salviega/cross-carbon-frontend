@@ -256,15 +256,12 @@ const Purchase = () => {
           { gasLimit: 2500000 }
         );
       } else {
-        //TODO - add crosschain purchase
-        // purchaseCarbonCreditsTX = await contract.buyCarbonCreditsCrosschain(
-        //   address!,
-        //   ethers.utils.parseEther(purchaseAmount),
-        //   { gasLimit: 2500000 }
-        // );
-        purchaseCarbonCreditsTX = await contract.buyCarbonCredits(
+        purchaseCarbonCreditsTX = await contract.buyCarbonCreditsCrosschain(
           address!,
           ethers.utils.parseEther(purchaseAmount),
+          process.env.NEXT_PUBLIC_POLYGON_MUMBAI_RECEIVER_CONTRACT_ADDRESS!,
+          `{"flag":"buy","buyer":${address},"amount":${ethers.utils.parseEther(purchaseAmount)},"network":"mumbai"}`,
+          '12532609583862916517',
           { gasLimit: 2500000 }
         );
       }
