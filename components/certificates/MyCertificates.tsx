@@ -29,7 +29,7 @@ const MyCertificates = () => {
 	const toast = useToast()
   const { address } = useAccount();
 	const [selectedNetworkIndex, setSelectedNetworkIndex] = useState<number>(0)
-
+	const [myNFTs, setMyNFTs] = useState<any[] | null>(null)
 	useEffect(() => {
 		readMyNfts()
 	}, [])
@@ -51,11 +51,13 @@ const MyCertificates = () => {
         CertificateContractJson.abi,
         web3Signer
       ) as Certificate;
-			const purchaseCarbonCreditsTX = await contract.tokensOfOwner(
+			const readNFTs = await contract.tokensOfOwner(
 				address!, 
 				{ gasLimit: 2500000 }
 			);
-			console.log(purchaseCarbonCreditsTX);
+			const response = await fetch(readNFTs[0].uri);
+			const data = await response.json();
+			setMyNFTs(readNFTs)
 		} catch (error) {
 			console.log(error)
 			toast({
@@ -128,15 +130,11 @@ const MyCertificates = () => {
 				</CardHeader>
 				<CardBody>
 					<SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4}>
-						<NFTComponent />
-						<NFTComponent />
-						<NFTComponent />
-						<NFTComponent />
-						<NFTComponent />
-						<NFTComponent />
-						<NFTComponent />
-						<NFTComponent />
-						{/* ... Add as many NFTComponent as you need */}
+						{
+							myNFTs?.map((nft, index) => (
+								<NFTComponent key={index} nft={nft} />
+							))
+						}
 					</SimpleGrid>
 				</CardBody>
 				<CardFooter>

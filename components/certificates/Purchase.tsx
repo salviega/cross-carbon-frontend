@@ -31,9 +31,9 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Carbon } from "../../@types/typechain-types";
 import { AvailableNetworks } from "../../models/networks-model";
 import { ConfirmationModal } from "../modal/ConfirmationModal";
-import CarbonContractJson from "../../assets/contracts/Carbon.json";
+import CarbonContractJson from "../../assets/deployments/mumbai/Carbon.json";
 import { getSigner } from "../../helpers/getSigner";
-
+import {storeMetadata} from "../../functions/storeData";
 export type SendInfo = {
   address: string;
   networkIndex: number;
@@ -302,13 +302,22 @@ const Purchase = () => {
         CarbonContractJson.abi,
         web3Signer
       ) as Carbon;
-
+      const uriObject = {
+        requestId: 'requestId',
+        flag: 'generic',
+        args: 'args',
+        values: [(offsetAmount).toString()],
+        buyer: 'buyer',
+        IPFSURL: 'IPFSURL'
+      }
+      const CID = await storeMetadata(uriObject)
+      const tokenURI = `https://w3s.link/ipfs/${CID}`
       let offsetCarbonCreditsTX;
       if (selectedNetworkOffset === 0) {
         offsetCarbonCreditsTX = await contract.retireCarbonCredits(
           address!,
           ethers.utils.parseEther(offsetAmount),
-          "TOKEN URI", //TODO - add token uri
+          tokenURI,
           { gasLimit: 2500000 }
         );
       } else {

@@ -12,10 +12,8 @@ const images = [
 	'https://w3s.link/ipfs/bafybeidiggcz27ie4m5j3e4xtncgb6vbpds36mz7m57pnfpqlgvdpcuzhu'
 ]
 
-const { WEB3STORAGE_TOKEN } = process.env
-
-if (!WEB3STORAGE_TOKEN) {
-	throw new Error('WEB3STORAGE_TOKEN not found in .env file')
+if (!process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN) {
+	throw new Error('NEXT_PUBLIC_WEB3STORAGE_TOKEN not found in .env file')
 }
 
 function getRandomImage() {
@@ -24,7 +22,7 @@ function getRandomImage() {
 }
 
 function getAccessToken() {
-	return WEB3STORAGE_TOKEN
+	return process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN
 }
 
 function makeStorageClient() {
@@ -77,6 +75,19 @@ export const storeMetadata = async dataObject => {
 					display_type: 'Total emissions',
 					trait_type: 'Emissions',
 					value: parseFloat(dataObject.values[2]).toString() / 1e18
+				}
+			]
+		}
+	} else if (dataObject.flag === 'generic') {
+		obj = {
+			description: 'Carbon NFT(Generic)',
+			image: getRandomImage(),
+			name: 'Carbon NFT - Certificate',
+			attributes: [
+				{
+					display_type: 'Total emissions',
+					trait_type: 'Emissions',
+					value: dataObject.values[0]
 				}
 			]
 		}
