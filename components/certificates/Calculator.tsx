@@ -24,7 +24,7 @@ const Calculate = () => {
     <Box
       bg={useColorModeValue("brand.newBlack", "rgba(4,56,80, 0.5)")}
       px={4}
-      width="100%"
+      width='96%'
       maxWidth="100%"
       margin="15px auto"
       borderRadius="2xl"
