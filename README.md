@@ -16,7 +16,7 @@ Repository url: https://github.com/salviega/cross-carbon-listener
 
 ### Cross Carbon - contracts:
 
-Repository url: https://github.com/salviega/green-carbon-calculator-contracts.git
+Repository url: https://github.com/salviega/cross-carbon-contracts
 
 ### Cross Carbon - subgraph:
 
