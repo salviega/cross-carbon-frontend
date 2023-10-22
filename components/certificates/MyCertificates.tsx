@@ -28,15 +28,17 @@ import { Certificate } from '../../@types/typechain-types'
 const MyCertificates = () => {
 	const toast = useToast()
 	const { address } = useAccount()
-	const [selectedNetworkIndex, setSelectedNetworkIndex] = useState<number>(-1)
+	const [selectedNetworkIndex, setSelectedNetworkIndex] = useState<number>(0)
 	const [myNFTs, setMyNFTs] = useState<any[] | null>(null)
+	const [error, setError] = useState<string>('')
 	useEffect(() => {
 		readMyNfts()
 	}, [])
-	const readMyNfts = async () => {
+	const readMyNfts = async (_index: number | null = null) => {
 		try {
 			const web3Signer = await getSigner()
-			const contractAddress = getAddress(selectedNetworkIndex)
+			console.log(_index)
+			const contractAddress = getAddress(_index ?? selectedNetworkIndex)
 			if (!contractAddress || contractAddress === undefined) {
 				toast({
 					title: 'Error reading NFT balance contract.',
@@ -54,15 +56,18 @@ const MyCertificates = () => {
 			const readNFTs = await contract.tokensOfOwner(address!, {
 				gasLimit: 2500000
 			})
+			setError('')
 			setMyNFTs(readNFTs)
 		} catch (error) {
 			console.log(error)
 			toast({
-				title: 'Error reading your NFTs.',
+				title: 'Please set the correct network (the one you are connected to).',
 				status: 'error',
 				duration: 5000,
 				isClosable: true
 			})
+			setMyNFTs(null)
+			setError('Please set the correct network (the one you are connected to).')
 		}
 	}
 	const getAddress = (newworkIndex: number) => {
@@ -109,16 +114,18 @@ const MyCertificates = () => {
 								colorScheme='teal'
 								ml={4}
 							>
-								{AvailableNetworks[selectedNetworkIndex]}
+								{selectedNetworkIndex === -1
+									? 'All networks'
+									: AvailableNetworks[selectedNetworkIndex]}
 							</MenuButton>
 							<MenuList>
-								<MenuItem onClick={() => setSelectedNetworkIndex(-1)}>
-									{'All networks'}
-								</MenuItem>
 								{AvailableNetworks.map((network, index) => (
 									<MenuItem
 										key={network}
-										onClick={() => setSelectedNetworkIndex(index)}
+										onClick={() => {
+											setSelectedNetworkIndex(index)
+											readMyNfts(index)
+										}}
 									>
 										{network}
 									</MenuItem>
@@ -138,14 +145,12 @@ const MyCertificates = () => {
 							You don't have any certificates yet.
 						</Heading>
 					)}
+					{error !== '' && (
+						<Heading size='md' mt={4}>
+							{error}
+						</Heading>
+					)}
 				</CardBody>
-				<CardFooter>
-					<Flex justifyContent='center' gap={4}>
-						<Button colorScheme='teal' variant='outline'>
-							Purchase New Certificate
-						</Button>
-					</Flex>
-				</CardFooter>
 			</Card>
 		</Box>
 	)
