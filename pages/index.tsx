@@ -15,7 +15,7 @@ const Home: NextPage = () => {
     if(isConnected) {
       router.push('/dashboard')
     }
-  }, [isConnected])
+  }, [isConnected, router])
   
   return (
     <div className={styles.container}>

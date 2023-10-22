@@ -28,7 +28,7 @@ const Dashboard = () => {
     if (!isConnected) {
       router.push("/");
     }
-  }, [isConnected]);
+  }, [isConnected, router]);
   const showWindow = (setEvent: (value: boolean) => void, event: boolean) => {
     hideWindows();
     setEvent(!event);

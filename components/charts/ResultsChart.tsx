@@ -73,7 +73,7 @@ const ResultsChart: React.FC<ResultsChartProps> = ({ emissions }) => {
               show: true,
               fontSize: "16px",
               fontFamily: "Helvetica, Arial, sans-serif",
-              color: undefined,
+              color: 'white',
               offsetY: 16,
               formatter: function (val: number) {
                 if (typeof val === "number") {
@@ -85,7 +85,7 @@ const ResultsChart: React.FC<ResultsChartProps> = ({ emissions }) => {
             total: {
               show: true,
               label: "Total",
-              color: "#373d3f",
+              color: "white",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: "bold",
               formatter: function (w: any) {

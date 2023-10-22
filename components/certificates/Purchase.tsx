@@ -757,7 +757,7 @@ const Purchase = () => {
 								</Box>
 							</Box>
 						)}
-            <iframe src="https://ccip.chain.link/msg/0x3e5071be3da52a8a7c877fc7689c2a57438e8d492ec854b00f0340a24ba1b32c"></iframe>
+            {/* <iframe src="https://ccip.chain.link/msg/0x3e5071be3da52a8a7c877fc7689c2a57438e8d492ec854b00f0340a24ba1b32c"></iframe> */}
 					</Box>
 				</CardBody>
 			</Card>

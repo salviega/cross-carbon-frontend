@@ -23,10 +23,8 @@ interface InitialFocusProps {
   finished: boolean;
   tx: string;
   action: string;
-  isSend: boolean;
-  receiver: string | null;
 }
-export function ConfirmationModal({
+export function CalculatorConfirmation({
   isOpen,
   onClose,
   amount,
@@ -36,8 +34,6 @@ export function ConfirmationModal({
   finished,
   tx,
   action,
-  isSend,
-  receiver
 }: InitialFocusProps) {
   const close = () => {
     if (loading) return;
@@ -90,20 +86,9 @@ export function ConfirmationModal({
                     textAlign={"center"}
                   />
                 </FormControl>
-                {isSend &&
-                <FormControl mt={4}>
-                  <FormLabel>Receiver</FormLabel>
-                  <Input
-                    placeholder="First name"
-                    isReadOnly
-                    value={receiver ?? "No receiver"}
-                    textAlign={"center"}
-                  />
-                </FormControl>}
               </>
             )}
           </ModalBody>
-
           <ModalFooter>
             <Button
               colorScheme="blue"
