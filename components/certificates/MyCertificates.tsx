@@ -27,8 +27,8 @@ import { AvailableNetworks } from '../../models/networks-model'
 import { Certificate } from '../../@types/typechain-types'
 const MyCertificates = () => {
 	const toast = useToast()
-  const { address } = useAccount();
-	const [selectedNetworkIndex, setSelectedNetworkIndex] = useState<number>(0)
+	const { address } = useAccount()
+	const [selectedNetworkIndex, setSelectedNetworkIndex] = useState<number>(-1)
 	const [myNFTs, setMyNFTs] = useState<any[] | null>(null)
 	useEffect(() => {
 		readMyNfts()
@@ -37,26 +37,23 @@ const MyCertificates = () => {
 		try {
 			const web3Signer = await getSigner()
 			const contractAddress = getAddress(selectedNetworkIndex)
-      if (!contractAddress || contractAddress === undefined) {
-        toast({
-          title: "Error reading NFT balance contract.",
-          status: "warning",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-      const contract = new Contract(
-        contractAddress,
-        CertificateContractJson.abi,
-        web3Signer
-      ) as Certificate;
-			const readNFTs = await contract.tokensOfOwner(
-				address!, 
-				{ gasLimit: 2500000 }
-			);
-			const response = await fetch(readNFTs[0].uri);
-			const data = await response.json();
+			if (!contractAddress || contractAddress === undefined) {
+				toast({
+					title: 'Error reading NFT balance contract.',
+					status: 'warning',
+					duration: 5000,
+					isClosable: true
+				})
+				return
+			}
+			const contract = new Contract(
+				contractAddress,
+				CertificateContractJson.abi,
+				web3Signer
+			) as Certificate
+			const readNFTs = await contract.tokensOfOwner(address!, {
+				gasLimit: 2500000
+			})
 			setMyNFTs(readNFTs)
 		} catch (error) {
 			console.log(error)
@@ -71,15 +68,19 @@ const MyCertificates = () => {
 	const getAddress = (newworkIndex: number) => {
 		switch (newworkIndex) {
 			case 0:
-				return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CERTIFICATE_CONTRACT_ADDRESS
+				return process.env
+					.NEXT_PUBLIC_POLYGON_MUMBAI_CERTIFICATE_CONTRACT_ADDRESS
 			case 1:
 				return process.env.NEXT_PUBLIC_SEPOLIA_CERTIFICATE_CERTIFICATE_ADDRESS
 			case 2:
-				return process.env.NEXT_PUBLIC_OPTIMISM_GOERLI_CERTIFICATE_CONTRACT_ADDRESS
+				return process.env
+					.NEXT_PUBLIC_OPTIMISM_GOERLI_CERTIFICATE_CONTRACT_ADDRESS
 			case 3:
-				return process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_CERTIFICATE_CONTRACT_ADDRESS
+				return process.env
+					.NEXT_PUBLIC_ARBITRUM_GOERLI_CERTIFICATE_CONTRACT_ADDRESS
 			default:
-				return process.env.NEXT_PUBLIC_POLYGON_MUMBAI_CERTIFICATE_CONTRACT_ADDRESS
+				return process.env
+					.NEXT_PUBLIC_POLYGON_MUMBAI_CERTIFICATE_CONTRACT_ADDRESS
 		}
 	}
 	return (
@@ -111,6 +112,9 @@ const MyCertificates = () => {
 								{AvailableNetworks[selectedNetworkIndex]}
 							</MenuButton>
 							<MenuList>
+								<MenuItem onClick={() => setSelectedNetworkIndex(-1)}>
+									{'All networks'}
+								</MenuItem>
 								{AvailableNetworks.map((network, index) => (
 									<MenuItem
 										key={network}
@@ -119,23 +123,21 @@ const MyCertificates = () => {
 										{network}
 									</MenuItem>
 								))}
-                <MenuItem
-										onClick={() => setSelectedNetworkIndex(-1)}
-									>
-										{"All networks"}
-									</MenuItem>
 							</MenuList>
 						</Menu>
 					</Flex>
 				</CardHeader>
 				<CardBody>
 					<SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4}>
-						{
-							myNFTs?.map((nft, index) => (
-								<NFTComponent key={index} nft={nft} />
-							))
-						}
+						{myNFTs?.map((nft, index) => (
+							<NFTComponent key={index} nft={nft} />
+						))}
 					</SimpleGrid>
+					{myNFTs?.length === 0 && (
+						<Heading size='md' mt={4}>
+							You don't have any certificates yet.
+						</Heading>
+					)}
 				</CardBody>
 				<CardFooter>
 					<Flex justifyContent='center' gap={4}>

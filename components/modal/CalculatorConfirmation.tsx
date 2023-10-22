@@ -18,7 +18,6 @@ interface InitialFocusProps {
   onClose: () => void;
   onConfirm: () => void;
   amount: string;
-  selectedNetwork: number;
   loading: boolean;
   finished: boolean;
   tx: string;
@@ -29,7 +28,6 @@ export function CalculatorConfirmation({
   onClose,
   amount,
   onConfirm,
-  selectedNetwork,
   loading,
   finished,
   tx,
@@ -74,15 +72,6 @@ export function CalculatorConfirmation({
                     placeholder="First name"
                     isReadOnly
                     value={`${amount} $CARBON`}
-                    textAlign={"center"}
-                  />
-                </FormControl>
-                <FormControl mt={4}>
-                  <FormLabel>Network</FormLabel>
-                  <Input
-                    placeholder="First name"
-                    isReadOnly
-                    value={AvailableNetworks[selectedNetwork]}
                     textAlign={"center"}
                   />
                 </FormControl>

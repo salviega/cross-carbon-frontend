@@ -5,6 +5,7 @@ const travelPath = '../assets/scripts/functions/travel/source.js'
 const groceryPath = '../assets/scripts/functions/grocery/source.js'
 
 export function getSource(category) {
+	console.log('11');
 	switch (category) {
 		case 'travel':
 			return fs.readFileSync(path.resolve(__dirname, travelPath)).toString()
