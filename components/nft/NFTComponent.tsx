@@ -1,18 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Stack,
   Flex,
-  Button,
   Text,
   VStack,
-  useBreakpointValue,
   Box,
   HStack,
   Image,
   Spacer,
 } from "@chakra-ui/react";
-
-const NFTComponent = () => {
+interface NFTProps {
+  title: string;
+  value: string;
+  description: string;
+  image: string;
+}
+const NFTComponent = (nft : any) => {
+  const [nftInfo, setNftInfo] = useState<NFTProps | null>(null);
+  useEffect(() => {
+    readNftInfo()
+  }, [])
+  const readNftInfo = async () => {
+    console.log(nft.nft.uri);
+    try {
+      const response = await fetch(nft.nft.uri)
+      const data = await response.json();
+      console.log(data.image);
+      
+      if(data.attributes.length === 1) { //generic
+        setNftInfo({ title: data.name,
+          value: data.attributes[0].value,
+          description: data.description,
+          image: data.image
+        })
+      } else if (data.attributes.length === 4) { //grocery
+        setNftInfo({ title: data.name,
+          value: data.attributes[3].value,
+          description: data.description,
+          image: data.image
+        })
+      } else if (data.attributes.length === 3) { //travel
+        setNftInfo({ title: data.name,
+          value: data.attributes[2].value,
+          description: data.description,
+          image: data.image
+        })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <Flex
       align="center"
@@ -33,23 +69,22 @@ const NFTComponent = () => {
       >
         <Image
           objectFit="cover"
-          src="/Images/nft.png"
+          src={nftInfo?.image}
           alt="Chakra UI"
           borderRadius="lg"
         />
         <VStack align="start">
           <HStack>
             <Text textColor="white" fontWeight="bold" fontSize="xl">
-              My Carbon Offset
+              {nftInfo?.title}
             </Text>
             <Spacer />
             <Text textColor="white" fontSize="md" fontWeight="semibold">
-              2,1 T CO2
+              {`${nftInfo?.value} T CO2`}
             </Text>
           </HStack>
           <Text textColor="gray.100" fontSize="sm">
-            For a greener tomorrow! This NFT represents a tokenized carbon
-            offset and stands as your pledge towards the environment.{" "}
+            {nftInfo?.description}
           </Text>
         </VStack>
       </Box>

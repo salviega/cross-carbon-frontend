@@ -7,8 +7,8 @@ export const calculatorInitialValues: EmissionDetails = {
       proteins: 0,
       fats: 0,
       carbs: 0,
-      total: 0,
     },
+    total: 0,
     units: "Tons",
   },
   travel: {
@@ -16,8 +16,8 @@ export const calculatorInitialValues: EmissionDetails = {
     co2: {
       hotelEmissionFactor: 0,
       flightEmissionFactor: 0,
-      total: 0,
     },
+    total: 0,
     units: "Tons",
   },
 };

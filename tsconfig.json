@@ -31,6 +31,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/components/MapLayer.tsx"
-  ],
+, "functions/storeData.js"  ],
   "exclude": ["node_modules"]
 }
